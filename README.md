@@ -101,10 +101,62 @@
 
 &nbsp;
 
+- [Cookie Size: 4096 bytes](https://chromestatus.com/feature/4946713618939904)
+- [Production Best Practices: Security](https://expressjs.com/en/advanced/best-practice-security.html)
+
+![diagrams-012-express-session](diagrams/diagrams-012-express-session.png)
+
+> <b>Mohammed:</b> As Stephen mentioned that using Cookie Session we store all of the data into the cookie rather than Express session where all of data is stored inside the cookie. So my question is does Cookie Session essentially mean the same as using JWT Token where all of the data is passed inside the token? If not how are they both different?
+
+> <b>Maeva:</b> Yes, cookies are basically doing the same thing as JWT tokens. The main differences are:
+
+> - Cookies are automatically sent back and forth in the HTTP request header. Coders don't have to manually set them, the browser automatically does the management. JWT must be programmatically set by you the coder in each requests.
+> - Cookies only work in browsers. JWT can work both in browsers and other platforms (e.g. mobile apps)
+> - Cookies have been used since forever (stood the test of time). JWT is a rather new technology that came with the rise of the mobile platform and its crossover with web technology.
+> - JWT payload are not necessarily encrypted (It's mostly using base64 encoding and some signature) There are still ongoing debate over the security of JWT.
+
+&nbsp;
+
+---
+
+&nbsp;
+
+- [passport.authorize()](http://www.passportjs.org/concepts/delegated-authorization/)
+
+> <b>Joseph:</b> How would you (or I) handle the use case where someone would be logging in with multiple Auths? How would we prevent the strategy from searching the db and creating an unnecessary new User in the case that they had auth'd with Google and now are auth'ing with IG?
+
+> <b>Stephen:</b> Hi Guys - Only way to handle this is to store the email given to you by the provider. Remember that with google, in the profile object we got a list of the user emails. We could store that list, then whenever someone signs in with another provider, check to see if that provider's emails have been used before from another provider. Confusing when I put it in words, but I bet you get it.
+
+> The thing to keep in mind is that this opens you up to account highjacking. For example, imagine the following:
+
+> - Bill signs up to our service with Google. Bill's google profile shows an email of bill@gmail.com.
+> - Hacker Jill then creates an account on Instagram and enters a fake email address of bill@gmail.com.
+> - Hacker Jill then comes to our site and tries to oauth through instagram.
+> - Our server might see the instagram profile email of bill@gmail.com, and - unless we guard against it - we might incorrectly link bill's account with this new instagram oauth.
+
+> To guard against this, do the following:
+
+> - Bill signs up with Google, and we create a new account that contains an email of bill@gmail.com.
+> - Bill logs out, then comes back to our site and attempts to oauth with Instagram. Let's imagine that instagram also lists bill@gmail.com.
+> - We must detect that Bill already has an account tied to google.
+> - After detecting that Bill already has a user account, we will only allow Bill to auth through Instagram and link this account if Bill is signed in with Google.
+> - In other words, only allow account linking if the user is already signed in with the other account. That proves that Bill is who they say they are and that both the Instagram and Google accounts belong to him.
+> - I know this sounds hard, but it isn't as bad as it sounds. To pull it off, every use model record store the the list of emails from each provider that the user auths with. Then, in each strategy you wire up, check to see if the user's email is already in use. If it is, check to see if the user is logged in (by looking at req.user). If they are, allow them to pass, otherwise tell them the email is in use and that they should go sign in with the other oauth provider first.
+
+&nbsp;
+
+---
+
+&nbsp;
+
 > <b>Sayan:</b> On <code>req.logout()</code>, the user is no longer attached to the req object. But when I go to the browser dev tools and open the Application tab, I can still see the cookie with session info in it. Shouldn't logout clear the cookie as well? What am I missing here?
 
 > <b>Mehdi:</b> Hello, logout doesnt 'clear' the cookie, it 'unests' the user from it, i think stephen did mention this in a video, i'm not sure which one but, when you are authentified the session object is set with an encrypted value that holds the userid, when you're logged out, the session's encrypted value is empty if that makes sense.
 
 > To verify this you can try to check the content of the session while logged in & out, the value inside session should be much 'longer' when u're logged in as opposed to when u're logged out
+
+&nbsp;
+
+---
 
 &nbsp;
