@@ -58,8 +58,12 @@
   4. <b>User consent:</b> OAuth consent screen
   5. <b>Authorized domains:</b> Not setup in this tutorial (Require hosting domain)
   6. <b>Web applications</b>
-     - <b>JavaScript origins:</b> <code>http://localhost:3000</code>
-     - <b>Authorized redirect URIs:</b> <code>http://localhost:3000/auth/google/callback</code>
+     - <b>JavaScript origins:</b>
+       - <code>http://localhost:3000</code>
+       - <code>https://emaily-30-mar-2022.herokuapp.com</code>
+     - <b>Authorized redirect URIs:</b>
+       - <code>http://localhost:3000/auth/google/callback</code>
+       - <code>https://emaily-30-mar-2022.herokuapp.com/auth/google/callback</code>
 
 ![diagrams-011.5-check-id-in-db](diagrams/diagrams-011.5-check-id-in-db.png)
 
@@ -121,6 +125,20 @@
 
 &nbsp;
 
+> <b>Sayan:</b> On <code>req.logout()</code>, the user is no longer attached to the req object. But when I go to the browser dev tools and open the Application tab, I can still see the cookie with session info in it. Shouldn't logout clear the cookie as well? What am I missing here?
+
+> <b>Mehdi:</b> Hello, logout doesnt 'clear' the cookie, it 'unests' the user from it, i think stephen did mention this in a video, i'm not sure which one but, when you are authentified the session object is set with an encrypted value that holds the userid, when you're logged out, the session's encrypted value is empty if that makes sense.
+
+> To verify this you can try to check the content of the session while logged in & out, the value inside session should be much 'longer' when u're logged in as opposed to when u're logged out
+
+&nbsp;
+
+---
+
+&nbsp;
+
+### Multiple Strategies
+
 - [passport.authorize()](http://www.passportjs.org/concepts/delegated-authorization/)
 
 > <b>Joseph:</b> How would you (or I) handle the use case where someone would be logging in with multiple Auths? How would we prevent the strategy from searching the db and creating an unnecessary new User in the case that they had auth'd with Google and now are auth'ing with IG?
@@ -149,11 +167,36 @@
 
 &nbsp;
 
-> <b>Sayan:</b> On <code>req.logout()</code>, the user is no longer attached to the req object. But when I go to the browser dev tools and open the Application tab, I can still see the cookie with session info in it. Shouldn't logout clear the cookie as well? What am I missing here?
+### Heroku Proxy Issue
 
-> <b>Mehdi:</b> Hello, logout doesnt 'clear' the cookie, it 'unests' the user from it, i think stephen did mention this in a video, i'm not sure which one but, when you are authentified the session object is set with an encrypted value that holds the userid, when you're logged out, the session's encrypted value is empty if that makes sense.
+- <b>Option 1:</b> set <code>GoogleStrategy({callbackURL: ...})</code> in full to include https
+- <b>Option 2:</b> Use a proxy
 
-> To verify this you can try to check the content of the session while logged in & out, the value inside session should be much 'longer' when u're logged in as opposed to when u're logged out
+> <b>Jeffrey:</b> In case anyone else is left curious as to how the <code>proxy: true</code> option works, I didn't find any documentation on the option itself, but I found the code that makes it work. I'd like to share what I learned in case someone else is curious.
+
+> Of course, an understanding of how it works requires an understanding of the problem. So I'll start there: When using Heroku's deployment system, our browser doesn't connect directly to the machine which hosts our server. It actually connects to one of Heroku's load-balancers (or "proxy"). That load-balancer then connects to the machine with our server, and ultimately forwards our request.
+
+> Even if we use https when we connect to the load-balancer, the load-balancer is free to forward using "http", which is what it's doing. The problem is that while we connect to the load-balancer using "https", the load-balancer forwards our request using "http".
+
+> That means that our server is never receiving an "https" request. The server receives an "http" request, which, combined with our relative <code>callbackURL</code> in the <code>GoogleStrategy</code> options, is what is used to build the callback URL. Because the callback URL is now an "http" URL it no longer matches the "https" we have listed as allowable in the Google console, and we get our error.
+
+> The fix is to somehow tell the server "Hey, this request was actually forwarded by a proxy, I want you to ignore the proxy's protocol and use the original sender's protocol, which is https".
+
+> Our mechanism for doing this is <code>proxy: true</code>, which works by leveraging a non-standard (but widely used and accepted) header called <code>X-Forwarded-Proto</code> to determine the original request's protocol. In this case, even though Heroku's load-balancer is forwarding using http, it also saves the original protocol's request ("https") using the <code>X-Forwarded-Proto</code> header.
+
+> When we set <code>proxy</code> to <code>true</code>, it tells our server to check if there is an <code>X-Forwarded-Proto</code> header in the request, and use the protocol stored there instead of whatever protocol the actual request used.
+
+> Interestingly, the strategy library we are using in the course (<code>passport-google-oauth2</code>) doesn't make any mention of a <code>proxy</code> option. However, by following the code we find that the function/class we ultimately end up importing via <code>require('passport-google-oauth2')</code> inherits from a more generic strategy library, called <code>passport-oauth2</code> ([See code here](https://github.com/jaredhanson/passport-google-oauth2/blob/723e8f3e8e711275f89e0163e2c77cfebae33f25/lib/strategy.js#L65))
+
+> In <code>passport-oauth2</code> we see that the <code>proxy</code> option is read from our supplied <code>options</code> into <code>this.\_trustProxy</code> ([code here](https://github.com/jaredhanson/passport-oauth2/blob/1ac8cbba5aef89845c959d543a248bbb647105c2/lib/strategy.js#L114)) and later passed to a function called <code>originalURL</code> where it is used to rebuild the callback URL ([code here](https://github.com/jaredhanson/passport-oauth2/blob/1ac8cbba5aef89845c959d543a248bbb647105c2/lib/strategy.js#L147)).
+
+> Inside <code>originalURL</code>, we see that it reads from the <code>X-Forwarded-Proto</code> header, if found, and uses it's contents instead of "http".
+
+> I also noticed that the library will honor an Express setting called <code>trust proxy</code>. Instead of using <code>proxy: true</code> in the options, we can also use a global express setting to achieve the same result. You can try it by commenting out proxy: true and adding the following right after <code>const app = express();</code> in <code>index.js: app.set('trust proxy', true);</code>
+
+> One benefit I can think of to this method vs using <code>proxy: true</code> is that we would have a single place to enable/disable the setting when using multiple auth strategies. For example, instead of adding similar <code>proxy: true</code> settings to each of google, facebook, and github login options, we would simply add or remove the <code>trust proxy</code> setting for express. This assumes the other Strategies also honor the setting.
+
+> For more info about Express' trust proxy behavior read ([here](https://expressjs.com/en/api.html#trust.proxy.options.table)) and ([here](http://expressjs.com/en/guide/behind-proxies.html)).
 
 &nbsp;
 
