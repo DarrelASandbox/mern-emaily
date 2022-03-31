@@ -14,4 +14,10 @@ module.exports = (app) => {
       res.redirect('/');
     }
   );
+
+  app.get('/api/logout', (req, res) => {
+    req.logout(); // passport.js
+    res.send('Logout');
+  });
+  app.get('/api/current_user', (req, res) => res.send(req.user));
 };
