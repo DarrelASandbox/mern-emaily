@@ -40,3 +40,24 @@
 - Create .gitignore file
 
 &nbsp;
+
+### OAuth Flow
+
+- <u>Password Library Components</u>
+  - passport: General helpers for handling auth in Express apps
+  - passport strategy: [List of Strategies](https://github.com/jaredhanson/passport/wiki/Strategies)
+
+![diagrams-003.5-oauth](diagrams/diagrams-003.5-oauth.png)
+
+- [Using OAuth 2.0 to Access Google APIs](https://developers.google.com/identity/protocols/oauth2)
+- [Setting up OAuth 2.0](https://support.google.com/cloud/answer/6158849)
+  1. Go to the Google Cloud Platform Console
+  2. Create new project
+  3. Create credentials
+  4. <b>User consent:</b> OAuth consent screen
+  5. <b>Authorized domains:</b> Not setup in this tutorial (Require hosting domain)
+  6. <b>Web applications</b>
+     - <b>JavaScript origins:</b> <code>http://localhost:3000</code>
+     - <b>Authorized redirect URIs:</b> <code>http://localhost:3000/auth/google/callback</code>
+
+&nbsp;
