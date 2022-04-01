@@ -304,6 +304,8 @@
 
 ### Routing in Production & Build client for Heroku
 
+- [What's the difference between path.resolve and path.join?](https://stackoverflow.com/questions/35048686/whats-the-difference-between-path-resolve-and-path-join)
+
 ![diagrams-008-options](diagrams/diagrams-008-options.png)
 
 - <b>Deployment Options:</b>
@@ -328,6 +330,26 @@
 > <b>Bobby:</b> Heroku used to set NPM_CONFIG_PRODUCTION to true by default (this is no longer the case), which meant that the devDependencies would get ignored entirely. Create React App used to install the react-scripts to the devDependencies of the package.json. The react-scripts are required in order to run the build step that generates the static React bundle during Heroku's post-build step. So, Heroku would not have been able to run the build step prior to deployment since those files would have been missing.
 
 > Again, since CRA now installs to the dependencies of the package.json, this is not really of concern. However, if you had instead manually built your own toolchain and included these files in the devDependencies, then the NPM_CONFIG_PRODUCTION would have some importance.
+
+&nbsp;
+
+---
+
+&nbsp;
+
+### Survey
+
+- Our user creates a survey with a simple 'yes/no' question
+- Express server creates an email template
+- Use 3rd party email provider to send email
+- End user clicks 'yes' or 'no' response
+- Email provider notes response
+- Email provider sends note to our Express server
+- Express server records feedback in Mongo
+
+![diagrams-010-subdoc-vs-collection](diagrams/diagrams-010-subdoc-vs-collection.png)
+
+- [MongoDB Limits and Thresholds](https://docs.mongodb.com/manual/reference/limits/)
 
 &nbsp;
 
