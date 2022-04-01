@@ -301,3 +301,36 @@
 - [Why we commit .env for client side.](https://github.com/facebookincubator/create-react-app/issues/2403)
 
 &nbsp;
+
+### Routing in Production & Build client for Heroku
+
+![diagrams-008-options](diagrams/diagrams-008-options.png)
+
+- <b>Deployment Options:</b>
+- <b>Option 1:</b>
+  - Build client project
+  - Commit built project
+  - Push to Heroku
+- <b>Option 2:</b>
+  - Push to Heroku
+  - Tell Heroku to install _all_ dependencies for client project
+  - [Heroku Nodejs Support](https://devcenter.heroku.com/articles/nodejs-support)
+- <b>Option 3:</b>
+  - Push to Continuous Integration (CI)
+  - Run tests and stuff
+  - CI builds and commits client
+  - CI pushes build to Heroku
+  - [Heroku CI](https://devcenter.heroku.com/articles/heroku-ci)
+  - [circleci](https://circleci.com/)
+
+> <b>Jordan:</b> In lecture 119 we set <code>NPM_CONFIG_PRODUCTION=false</code> which installs the dev dependencies on the client-side. Why do we need dev dependencies? I thought the whole point of dev dependencies is that you don't need them when your app is deployed.
+
+> <b>Bobby:</b> Heroku used to set NPM_CONFIG_PRODUCTION to true by default (this is no longer the case), which meant that the devDependencies would get ignored entirely. Create React App used to install the react-scripts to the devDependencies of the package.json. The react-scripts are required in order to run the build step that generates the static React bundle during Heroku's post-build step. So, Heroku would not have been able to run the build step prior to deployment since those files would have been missing.
+
+> Again, since CRA now installs to the dependencies of the package.json, this is not really of concern. However, if you had instead manually built your own toolchain and included these files in the devDependencies, then the NPM_CONFIG_PRODUCTION would have some importance.
+
+&nbsp;
+
+---
+
+&nbsp;
