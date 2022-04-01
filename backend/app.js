@@ -9,7 +9,7 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 app.use(
   cookieSession({

@@ -8,12 +8,15 @@
     "npm": "8.x"
   },
   "scripts": {
-    "start": "npx nodemon backend/app.js"
+    "server": "npx nodemon backend/app.js --ignore client",
+    "client": "npm start --prefix client",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^7.0.0",
     "cookie-session": "^2.0.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",

@@ -60,9 +60,11 @@
   6. <b>Web applications</b>
      - <b>JavaScript origins:</b>
        - <code>http://localhost:3000</code>
+       - <code>http://localhost:4000</code>
        - <code>https://emaily-30-mar-2022.herokuapp.com</code>
      - <b>Authorized redirect URIs:</b>
        - <code>http://localhost:3000/auth/google/callback</code>
+       - <code>http://localhost:4000/auth/google/callback</code>
        - <code>https://emaily-30-mar-2022.herokuapp.com/auth/google/callback</code>
 
 ![diagrams-011.5-check-id-in-db](diagrams/diagrams-011.5-check-id-in-db.png)
@@ -197,6 +199,18 @@
 > One benefit I can think of to this method vs using <code>proxy: true</code> is that we would have a single place to enable/disable the setting when using multiple auth strategies. For example, instead of adding similar <code>proxy: true</code> settings to each of google, facebook, and github login options, we would simply add or remove the <code>trust proxy</code> setting for express. This assumes the other Strategies also honor the setting.
 
 > For more info about Express' trust proxy behavior read ([here](https://expressjs.com/en/api.html#trust.proxy.options.table)) and ([here](http://expressjs.com/en/guide/behind-proxies.html)).
+
+&nbsp;
+
+---
+
+&nbsp;
+
+### Create React App
+
+> <b>Azteker:</b> Why cannot we make the dev mode the way like prod mode? Why do we have to use react server in dev mode?
+
+> <b>Bobby:</b> In production the only thing that exists of the client side is a bundle.js asset file which is the transpiled minified version of all the code. Without CRA you would have to manually generate this asset every single time a change was made to the project, which would not be reasonable.
 
 &nbsp;
 
