@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { StripePayments } from './';
 
 class Header extends Component {
   renderContent() {
@@ -8,14 +9,26 @@ class Header extends Component {
       case null:
         return;
       case false:
-        return <a href='/auth/google'>Login with Google</a>;
+        return (
+          <li>
+            <a href='/auth/google'>Login with Google</a>
+          </li>
+        );
       default:
-        return <a href='/api/logout'>Logout</a>;
+        return (
+          <>
+            <li>
+              <StripePayments />
+            </li>
+            <li>
+              <a href='/api/logout'>Logout</a>
+            </li>
+          </>
+        );
     }
   }
 
   render() {
-    console.log(this.props);
     return (
       <nav>
         <div className='nav-wrapper'>
@@ -25,7 +38,7 @@ class Header extends Component {
             Emaily
           </Link>
           <ul className='right' href='/auth/google'>
-            <li>{this.renderContent()}</li>
+            {this.renderContent()}
           </ul>
         </div>
       </nav>

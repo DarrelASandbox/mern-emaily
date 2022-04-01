@@ -264,3 +264,40 @@
 ---
 
 &nbsp;
+
+### Billing
+
+- Never accept raw credit card numbers
+- Never store credit card numbers
+- Always use an outside payment processor
+- Possible to avoid monthly payments/multiple plans?
+- Fraud and chargebacks are a pain
+
+> <b>Randy:</b> His suggestion is more in line with the scenario that you actually described where the credits cost a set prices. In your example, you mention 50 or 100 surveys and this would still fall under the same pricing structure as spending $1 for 1 credit as no Monthly SUBSCRIPTION is being introduced into the billing process, just pay once in the transaction for the desired amount of credits/surveys ($50 for 50 surveys or $100 for 100 surveys).
+
+> Lets say you did want to offer a subscription service for the example you gave with the user switching from a 50 survey plan to a 100 survey plan in the middle of the cycle. Would it make more sense to go through the trouble of building all of the logic involved just to give the difference or would it be easier for them to initiate another transaction in the manner that Stephen is suggesting? Either way, they will come away with the same number of desired surveys/credits (assuming they are still $1 per credit in your subscription plans).
+
+> I see it as Stephen giving us a clear heads-up/warning about the pitfalls of overcomplicating something that is already hard and sometimes it's best to keep it simple and don't give your users/customers any means cause a fuss or become confused about pricing or plan upgrades. Hopefully this helps!
+
+- User clicks 'Add Credits'
+- Tell Stripe to show a credit card form
+- User enters credit card details
+- Details sent directly from the form to Stripe
+- Stripe sends back a token representing the charge
+- We send token to our API
+- Our API confirms the charge was successful with Stripe
+- Add credits to user's account
+
+&nbsp;
+
+---
+
+&nbsp;
+
+### Stripe & Environment Variables
+
+- [Stripe - checkout](https://stripe.com/docs/checkout/quickstart)
+- [Adding Custom Environment Variables](https://create-react-app.dev/docs/adding-custom-environment-variables/)
+- [Why we commit .env for client side.](https://github.com/facebookincubator/create-react-app/issues/2403)
+
+&nbsp;
