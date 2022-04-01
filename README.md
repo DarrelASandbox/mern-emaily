@@ -206,11 +206,58 @@
 
 &nbsp;
 
-### Create React App
+### Create React App Proxy Issue
+
+- [Proxying API Requests in Development](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
+
+> <b>Bobby:</b> React doesn't have a server, however, the tool we used to set up our environment - Create React App, provides us with the use of a Webpack Dev Server to transpile and build our code on the fly. This how we get our live updating when we make code changes. It is only meant for development, not production. In production, we need to build our static React assets and then have Express serve them and handle requests from users etc.
+
+![diagrams-005-architecture-dev](diagrams/diagrams-005-architecture-dev.png)
+
+![diagrams-006-architecture-prod](diagrams/diagrams-006-architecture-prod.png)
+
+![diagrams-008-other-architecture-domains](diagrams/diagrams-008-other-architecture-domains.png)
+
+![diagrams-010-oauth-flow](diagrams/diagrams-010-oauth-flow.png)
+
+![diagrams-011-oauth-prod](diagrams/diagrams-011-oauth-prod.png)
 
 > <b>Azteker:</b> Why cannot we make the dev mode the way like prod mode? Why do we have to use react server in dev mode?
 
 > <b>Bobby:</b> In production the only thing that exists of the client side is a bundle.js asset file which is the transpiled minified version of all the code. Without CRA you would have to manually generate this asset every single time a change was made to the project, which would not be reasonable.
+
+&nbsp;
+
+---
+
+&nbsp;
+
+### Redux
+
+- The existing <code>connect</code> API still works and will continue to be supported, but the hooks API is simpler and works better with TypeScript.
+- [What is the main difference between using React-Redux Hooks and React-Redux Connect()?](https://stackoverflow.com/questions/58027300/what-is-the-main-difference-between-using-react-redux-hooks-and-react-redux-conn)
+
+![diagrams-019-axios-dispatch](diagrams/diagrams-019-axios-dispatch.png)
+
+> <b>Enrique:</b> Why don't use the redux-promise middleware? What's the differences?
+
+> <b>Faraaz:</b> Redux Thunk allows your action creators to return a function instead of returning an action object. This function gives you access to the dispatch function, and allows you to dispatch multiple actions as you please. You can dispatch actions when certain conditions are met. Redux Promise on the other hand, allows your action creators to return a promise as the payload. You can use both Redux Thunk and Redux Promise in your applications based on the situation. If there is a lot of complexity or a need for conditonals, Redux Thunk is the way to go. But let's say you have multiple promises and also have the need for conditionals at the same time, you will be using both.
+
+![diagrams-020-redux-thunk](diagrams/diagrams-020-redux-thunk.png)
+
+![diagrams-021-auth-reducer-states](diagrams/diagrams-021-auth-reducer-states.png)
+
+![diagrams-022-logout](diagrams/diagrams-022-logout.png)
+
+> <b>Torleif:</b> I see several people putting out code here to handle logging out on the client side via redux etc.
+
+> Be aware that none of them (at least the ones I've seen so far) seem to care about other data loaded into the store. Clearing the auth store tells the app that the user is logged out, yes, but if a user has been logged in, there will be other data loaded in the store. For this app specifically, you'll (eventually) have surveys belonging to the user, status of purchased in-app currency, etc.
+
+> These things should also be cleared out. And a very safe and easy way to do that, is a full browser refresh/redirect.
+
+> If you don't do a full refresh/redirect, you might be setting yourself up for accidental leaking of personal data...
+
+> It might be unlikely that someone gets access to personal data this way, but it is possible, and it's better to be safe than sorry...
 
 &nbsp;
 
