@@ -1,10 +1,9 @@
 import { Component } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Header } from './components';
 import { connect } from 'react-redux';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import * as actions from './actions';
+import { Header, Landing } from './components';
 
-const Landing = () => <h1>Home</h1>;
 const Dashboard = () => <h1>Dashboard</h1>;
 const SurveyNew = () => <h1>SurveyNew</h1>;
 
