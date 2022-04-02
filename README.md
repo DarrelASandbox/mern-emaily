@@ -3,6 +3,7 @@
 - Node with React: Fullstack Web Development
 - Build and deploy fullstack web apps with NodeJS, React, Redux, Express, and MongoDB.
 - Tutorial for Emaily
+- [Original Repo: Emaily](https://github.com/StephenGrider/FullstackReactCode)
 - [Stephen Grider](https://github.com/StephenGrider)
 
 &nbsp;
@@ -351,8 +352,63 @@
 
 - [MongoDB Limits and Thresholds](https://docs.mongodb.com/manual/reference/limits/)
 
+> <b>Adam:</b> Is there any particular reason we don't have to create a new recipientSchema object for each email, e.g:
+
+> <code>recipients: recipients.split(',').map(email => new Recipient({ email })) </code>
+
+> Instead we pass in a plain object that conforms to the schema, but isn't an instance of the Recipient model. I'm guessing Mongoose does that behind the scenes? Otherwise, how would the responded property in the schema be created with its default value?
+
+> <b>Andrew:</b> Late response but when we defined the survey schema we set it to expect an array of recipient objects so mongoose knows that the objects in the array are supposed to be an instance of the recipient model class. Since we pass in the email property and the responded property has a default value, the objects in the array will match all of the necessary criteria for recipient schema.
+
 &nbsp;
 
 ---
+
+&nbsp;
+
+> <b>Shay:</b> How does user (e.g req.user) is defined everywhere?
+
+> <b>Bobby:</b> That's the problem, you are looking for an exact place req.user is being set in our code. You will not find it, because this is being set under the hood by our passport middleware. That was the point Stephen was making in his comment:
+
+> "Its coming from Passport, specifically from the 'app.use(passport())' middleware. Here's the source code from what that 'passport()' call is doing: https://github.com/jaredhanson/passport/blob/master/lib/middleware/authenticate.js#L244. Line 244 is where 'req.user' is set. You can read the comments in this file to get a better picture of what is going on, too."
+
+> The source code tries to address this and make this clear:
+
+- Applies the `name`ed strategy (or strategies) to the incoming request, in order to authenticate the request. If authentication is successful, the user will be logged in and populated at `req.user` and a session will be established by default. If authentication fails, an unauthorized response will be sent.
+
+&nbsp;
+
+---
+
+&nbsp;
+
+> <b>Pavel:</b> Somewere along the way i forgot how does req get the hold of the user obj.
+
+> <b>Jimmy:</b> CookieParser Middleware intercepts session passes the data to Passport Middleware passes the data to req.user. Services/Passport.js has all the code that serialises and deserialises the user data into the request object that you use in the app routes.
+
+&nbsp;
+
+---
+
+&nbsp;
+
+- Create new Survey instance
+- Attempt to create and send email
+- Email sent successfully?
+- Save survey!
+- Survey handler complete
+
+![diagrams-017-rules-of-email](diagrams/diagrams-017-rules-of-email.png)
+
+![diagrams-018-good-email-approach](diagrams/diagrams-018-good-email-approach.png)
+
+- We tell Sendgrid to send an email
+- Sendgrid scans the email, replaces every link with their own special one
+  - Sendgrid knows who the recipient of every email is! The links they inject into the email contains a token that identifies the user!
+- User clicks a link
+- Sendgrid knows who clicked it!
+  - User sent to their destination
+    - User happy
+  - Sendgrid sends a message to our telling us about the click
 
 &nbsp;

@@ -6,4 +6,5 @@ const recipientSchema = new Schema({
   responded: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model('Recipient', recipientSchema);
+// export directly instead of creating a model
+module.exports = recipientSchema;
