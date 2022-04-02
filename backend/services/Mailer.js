@@ -19,3 +19,8 @@ class Mailer {
 }
 
 module.exports = Mailer;
+
+/* For testing purpose in browser console
+const survey = { title: "my title", subject: "Feedback for services", recipients: "xmynlakjmucoabwxao@kvhrr.com", body: "Are you satisfied with our services?"}
+axios.post('/api/surveys', survey);
+*/
