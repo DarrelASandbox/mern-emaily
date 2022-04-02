@@ -1,6 +1,27 @@
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+// /*
+class Mailer {
+  constructor({ subject, recipients }, content) {
+    sgMail.setApiKey(process.env.API_KEY_SENDGRID);
+    this.msg = {
+      to: recipients.map(({ email }) => email),
+      from: 'no-reply@emaily.com',
+      subject: subject,
+      html: content,
+      trackingSettings: { enable_text: true, enabled: true },
+    };
+  }
+
+  async send() {
+    const response = await sgMail.send(this.msg);
+    return response;
+  }
+}
+
+module.exports = Mailer;
+// */
+/*
 class Mailer {
   constructor({ subject, recipients }, htmlContent) {
     this.recipients = recipients.map(({ email }) => email);
@@ -13,8 +34,8 @@ class Mailer {
 
     this.emails = {
       to: this.recipients,
-      from: 'no-reply@example.com',
-      subject: subject,
+      from: 'no-reply@emaily.com',
+      subject,
       html: htmlContent,
 
       tracking_settings: {
@@ -43,3 +64,4 @@ class Mailer {
 }
 
 module.exports = Mailer;
+// */
