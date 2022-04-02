@@ -412,3 +412,178 @@
   - Sendgrid sends a message to our telling us about the click
 
 &nbsp;
+
+---
+
+&nbsp;
+
+![diagrams-004-form-with-redux](diagrams/diagrams-004-form-with-redux.png)
+
+> <b>Ivan:</b> I have decided to go with Formik + Yup instead of redux-form here. The part for submitting the form to backend and reviewing the form is not included here but you should just follow the course from lecture 169 onwards for that.
+
+- SurveyForm
+
+```js
+import React from 'react';
+import {Form, Formik, useField} from 'formik';
+import * as Yup from 'yup';
+import {Link} from "react-router-dom";
+import {reviewSurvey} from "../../actions";
+import {connect} from "react-redux";
+
+const MyTextInput = ({label, ...props}) => {
+    const [field, meta] = useField(props);
+    return (
+        <>
+            <label htmlFor={props.id || props.name}>{label}</label>
+            <input className="text-input" {...field} {...props} />
+            {meta.touched && meta.error ? (
+                <div className="error red-text">{meta.error}</div>
+            ) : null}
+        </>
+    );
+};
+
+const SurveyForm = ({survey, reviewSurvey, setShowReview}) => {
+    console.log("survey props", survey)
+    return (
+        <>
+            <h3>Submit a survey!</h3>
+            <Formik
+                initialValues={‌{
+                    title: survey?.title || "",
+                    subject: survey?.subject || "",
+                    body: survey?.body || "",
+                    recipients: survey?.recipients || "",
+                }}
+                validationSchema={Yup.object({
+                    title: Yup.string()
+                        .required('Required'),
+                    subject: Yup.string()
+                        .required('Required'),
+                    body: Yup.string()
+                        .required('Required'),
+                    recipients: Yup.array()
+                        .transform(function (value, originalValue) {
+                            if (this.isType(value) && value !== null) {
+                                return value;
+                            }
+                            return originalValue ? originalValue.split(/[\s,]+/) : [];
+                        })
+                        .of(Yup.string().email(({value}) => `${value} is not a valid email`)),
+                })}
+                onSubmit={(values) => {
+                    reviewSurvey(values)
+                    setShowReview(true)
+                }}
+                validateOnChange={false}
+            >
+                <Form>
+                    <MyTextInput
+                        label="Survey Title"
+                        name="title"
+                        type="text"
+                        placeholder=""
+                    />
+                    <MyTextInput
+                        label="Subject Line"
+                        name="subject"
+                        type="text"
+                        placeholder=""
+                    />
+                    <MyTextInput
+                        label="Email Body"
+                        name="body"
+                        type="text"
+                        placeholder=""
+                    />
+                    <MyTextInput
+                        label="Recipient List"
+                        name="recipients"
+                        type="text"
+                        placeholder=""
+                    />
+                    <Link to="/surveys" className="red btn-flat left white-text">Cancel</Link>
+                    <button className="teal btn-flat right white-text" type="submit">Submit<i
+                        className="material-icons right">done</i></button>
+                </Form>
+            </Formik>
+        </>
+    );
+};
+
+function mapStateToProps(state) {
+    return {survey: state.survey};
+}
+
+export default connect(mapStateToProps, {reviewSurvey})(SurveyForm)
+```
+
+- SurveyNew
+
+```js
+import React from 'react';
+import SurveyForm from './SurveyForm';
+import SurveyReview from './SurveyFormReview';
+
+class SurveyNew extends React.Component {
+  state = { showReview: false };
+
+  render() {
+    if (this.state.showReview)
+      return (
+        <SurveyReview
+          setShowReview={(showReview) => this.setState({ showReview })}
+        />
+      );
+    else
+      return (
+        <SurveyForm
+          setShowReview={(showReview) => this.setState({ showReview })}
+        />
+      );
+  }
+}
+
+export default SurveyNew;
+```
+
+- reviewSurvey action creator
+
+```js
+export const reviewSurvey = (survey) => {
+  return { type: REVIEW_SURVEY, payload: survey };
+};
+```
+
+- surveyReducer
+
+```js
+import { REVIEW_SURVEY } from '../actions/types';
+
+const surveyReducer = (state = null, action) => {
+  switch (action.type) {
+    case REVIEW_SURVEY:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+export default surveyReducer;
+```
+
+> <b>Ivan:</b> Ivan's solution works great, Thank you :) For fellow students who want to use this solution, please combine reducers in /reducers/index.js
+
+```js
+export default combineReducers({
+  auth: authReducer,
+  survey: surveyReducer,
+});
+```
+
+&nbsp;
+
+---
+
+&nbsp;
