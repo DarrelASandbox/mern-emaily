@@ -593,3 +593,21 @@ export default combineReducers({
 ![diagrams-010-react-router](diagrams/diagrams-010-react-router.png)
 
 &nbsp;
+
+### Webhooks In Development
+
+![diagrams-002-webhook-prod](diagrams/diagrams-002-webhook-prod.png)
+
+![diagrams-003-webhook-dev](diagrams/diagrams-003-webhook-dev.png)
+
+![diagrams-004-webhook-workaround](diagrams/diagrams-004-webhook-workaround.png)
+
+```sendgrid Event Webhook
+https://1c11-103-107-198-118.ngrok.io/api/surveys/webhooks
+```
+
+![ngrok-terminal](diagrams/ngrok-terminal.png)
+
+![diagrams-005-req-body](diagrams/diagrams-005-req-body.png)
+
+&nbsp;
