@@ -9,7 +9,18 @@ const Survey = require('../models/Survey');
 const Mailer = require('../services/Mailer');
 const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 
+// https://docs.mongodb.com/manual/reference/method/db.collection.find/#db-collection-find
+// db.collection.find(query, projection)
 module.exports = (app) => {
+  app.get('/api/surveys', requireLogin, async (req, res) => {
+    const surveys = await Survey.find(
+      { _user: req.user.id },
+      { recipients: false }
+    );
+
+    res.send(surveys);
+  });
+
   app.get('/api/surveys/:surveyId/:choice', (req, res) => {
     res.send('Thank you for the feedback!');
   });
