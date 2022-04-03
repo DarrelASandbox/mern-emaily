@@ -610,4 +610,48 @@ https://1c11-103-107-198-118.ngrok.io/api/surveys/webhooks
 
 ![diagrams-005-req-body](diagrams/diagrams-005-req-body.png)
 
+![diagrams-006-url](diagrams/diagrams-006-url.png)
+
+![diagrams-007-vote-url](diagrams/diagrams-007-vote-url.png)
+
+> <b>Seng Fei:</b> May I know where do we get our survey id on the spot when we put it in email email template as ${survey.id}? Because I thought the survey object that we passed in only contains title, subject, body, recipients, \_user and dateSent. The survey id only generated when it is being stored in database, that is after we send the mailer.
+
+> <b>Matouš:</b> It is generated when you create the survey. <code>const survey = new Survey.../<code>. You can <code>console.log(survey)</code> right after to see the object
+
+![diagrams-008-extract](diagrams/diagrams-008-extract.png)
+
+> <b>Mostafa:</b> what lodash map function provides that we use it instead of default map?
+
+> <b>Stephen:</b> Lodash's map function works better when the array we're trying to map is accidentally undefined. Example:
+
+```js
+const arr = undefined;
+arr.map(v => v); // Exception!
+\_.map(arr, v => v); // OK.
+```
+
+&nbsp;
+
+---
+
+&nbsp;
+
+> <b>Jason:</b> Receiving multiple arrays instead of one array
+
+> <b>Nellie:</b> I think it happens because our mouse clicks, as fast as we try, are still slower than Javascript's processing. I created two console logs: one inside of the 'map' function, and the other outside, after the map processing:
+
+![2019-02-17_02-32-03-2e535944bea9039c1bfc41c8308a3368](diagrams/2019-02-17_02-32-03-2e535944bea9039c1bfc41c8308a3368.png)
+
+> I tried to click two clicks as rapidly as I could, the same "Yes", and this is what came out:
+
+![2019-02-17_02-33-05-c7df12e33b9cec501228480d5647f3d4](diagrams/2019-02-17_02-33-05-c7df12e33b9cec501228480d5647f3d4.png)
+
+> this means, that by the time I was clicking the second time, the first cycle ("match" and "events") was already finished and has been printed out.
+
+> Further compacting and uniqBy-ing an array with a single element results in the same array with the same single element. That is, these further manipulations have no effect. This is why we have multiple arrays, each with a single object, printing out.
+
+> If all of this is correct, then these arrays should be kept in some intermediate semi-permanent storage (Redis?) to be compared and pared down later, before saving in the database and tabulating a summary of the campaign.
+
+> <b>Nellie:</b> AN UPDATE: In Lecture 187, while doing the final test, the yes/no count in mLab updates CORRECTLY, even though the console keeps producing an array per click.
+
 &nbsp;

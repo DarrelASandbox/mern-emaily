@@ -24,9 +24,11 @@
     "cookie-session": "^2.0.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "lodash": "^4.17.21",
     "mongoose": "^6.2.9",
     "passport": "^0.5.2",
     "passport-google-oauth20": "^2.0.0",
+    "path-parser": "^6.1.0",
     "stripe": "^8.214.0"
   }
 }
