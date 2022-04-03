@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { reduxForm } from 'redux-form';
 import SurveyForm from './SurveyForm';
 import SurveyFormReview from './SurveyFormReview';
 
@@ -27,4 +28,7 @@ class SurveyNew extends Component {
   }
 }
 
-export default SurveyNew;
+// If SurveyNew is unmounted, (default behavior by redux form)
+// dump form values with reduxForm({ form: 'surveyForm' })
+// Refer to SurveyForm.js destroyOnUnmount: false
+export default reduxForm({ form: 'surveyForm' })(SurveyNew);

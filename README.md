@@ -587,3 +587,9 @@ export default combineReducers({
 ---
 
 &nbsp;
+
+### Redirect On Submit Survey
+
+![diagrams-010-react-router](diagrams/diagrams-010-react-router.png)
+
+&nbsp;
