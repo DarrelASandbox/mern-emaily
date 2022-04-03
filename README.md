@@ -19,6 +19,7 @@
         <li><a href="#survey">Survey</a></li>
         <li><a href="#redirect-on-submit-survey">Redirect On Submit Survey</a></li>
         <li><a href="#webhooks-in-development">Webhooks In Development</a></li>
+        <li><a href="#bad-mongoose-queries">Bad Mongoose Queries</a></li>
       </ul>
     </li>
   </ol>
@@ -727,5 +728,51 @@ events = _.uniqWith(
 .otherChainedThings(...)
 .uniqWith((a, b) => a.email === b.email && a.surveyId === b.surveyId);
 ```
+
+&nbsp;
+
+### Bad Mongoose Queries
+
+```js
+_.forEach(events, async ({ surveyId, email, choice }) => {
+  // retrieving survey instance + entire subdocument collection
+  let survey = await Survey.findById(surveyId);
+
+  // find a recipient that matches email and has not responded yet
+  // checking one by one
+  const responder = survey.recipients.find(
+    (recipient) => recipient.email === email && !recipient.responded
+  );
+
+  if (!responder) {
+    // the recipient has already responded
+    return console.warn('Respponse already logged!');
+  } else {
+    // recipinet hasn't responded ,set their responded flag to true
+    survey.recipients.id(responder._id).responded = true;
+    survey[answer] += 1;
+    survey.lastResponded = new Date(timestamp * 1000);
+
+    survey.save(); // send back entire list of recipients
+  }
+});
+```
+
+![diagrams-011-mongo-queries](diagrams/diagrams-011-mongo-queries.png)
+
+- Mongoose Tips
+
+  - Google the question and chances are it will be on stackoverflow.
+  - Use node cli to query.
+
+    ```sh
+    ...packages
+    require('./models/User');
+    require('./models/Survey');
+    require('./services/passport');
+    mongoose.connect(process.env.MONGODB_URI);
+
+    Survey.find({yes: 0}).then(console.log)
+    ```
 
 &nbsp;
