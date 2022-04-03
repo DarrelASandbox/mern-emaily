@@ -655,3 +655,33 @@ arr.map(v => v); // Exception!
 > <b>Nellie:</b> AN UPDATE: In Lecture 187, while doing the final test, the yes/no count in mLab updates CORRECTLY, even though the console keeps producing an array per click.
 
 &nbsp;
+
+---
+
+&nbsp;
+
+> <b>Jeffrey:</b> Bug in the code (\_.uniqBy() doesn't take a third argument)
+
+> Just an FYI to <b>not</b> rely on the usage of <code>\_.uniqBy</code> taught in the video. The usage of <code>_.uniqBy</code> shown is incorrect. The video shows a third argument provided to <code>_.uniqBy</code>, but it is ignored by lodash.
+
+> In this case, the bug is that the hook will only allow one survey per email address per batch of events sent by sendgrid. The surveyId is not used to determine uniqueness. I checked the documentation and the code itself for the current version of lodash (<code>4.17.15</code> as of today) in github as well as the version Stephen used in his video (<code>4.17.4</code>, based on his <code>npm install</code> command in video 187). Neither accept a third argument.
+
+> Additionally, the current state of lodash's master branch seems to remove the ability to pass in a field name completely, allowing instead only a function. Most likely that change would be included in a major version upgrade for lodash (5.x.x).
+
+> Edit: Here's some code to use in place of it, which does what is expected:
+
+```js
+events = _.uniqWith(
+  events,
+  (a, b) => a.email === b.email && a.surveyId === b.surveyId
+);
+```
+
+> And with the chaining, use:
+
+```js
+.otherChainedThings(...)
+.uniqWith((a, b) => a.email === b.email && a.surveyId === b.surveyId);
+```
+
+&nbsp;
