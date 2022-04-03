@@ -6,7 +6,7 @@
     <li>
       <a href="#notes">Notes</a>
       <ul>
-        <li><a href="#app-user-flow--tech-stack">pp User Flow & Tech Stack</a>A</li>
+        <li><a href="#app-user-flow--tech-stack">App User Flow & Tech Stack</a></li>
         <li><a href="#deployment-checklist">Deployment Checklist</a></li>
         <li><a href="#oauth-flow">OAuth Flow</a></li>
         <li><a href="#multiple-strategies">Multiple Strategies</a></li>
@@ -31,7 +31,7 @@
 
 - Node with React: Fullstack Web Development
 - Build and deploy fullstack web apps with NodeJS, React, Redux, Express, and MongoDB.
-- Tutorial for Emaily
+- Tutorial for Emaily ([Heroku Demo](https://emaily-30-mar-2022.herokuapp.com/))
 - [Original Repo: Emaily](https://github.com/StephenGrider/FullstackReactCode)
 - [Stephen Grider](https://github.com/StephenGrider)
 
