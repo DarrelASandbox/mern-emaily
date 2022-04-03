@@ -1,3 +1,31 @@
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+  <li><a href="#about-the-project">About The Project</a></li>
+  <li><a href="#app-overview">App Overview</a></li>
+    <li>
+      <a href="#notes">Notes</a>
+      <ul>
+        <li><a href="#app-user-flow--tech-stack">pp User Flow & Tech Stack</a>A</li>
+        <li><a href="#deployment-checklist">Deployment Checklist</a></li>
+        <li><a href="#oauth-flow">OAuth Flow</a></li>
+        <li><a href="#multiple-strategies">Multiple Strategies</a></li>
+        <li><a href="#heroku-proxy-issue">Heroku Proxy Issue</a></li>
+        <li><a href="#create-react-app-proxy-issue">Create React App Proxy Issue</a></li>
+        <li><a href="#redux">Redux</a></li>
+        <li><a href="#billing">Billing</a></li>
+        <li><a href="#stripe--environment-variables">Stripe & Environment Variables</a></li>
+        <li><a href="#routing-in-production--build-client-for-heroku">Routing in Production & Build client for Heroku</a></li>
+        <li><a href="#survey">Survey</a></li>
+        <li><a href="#redirect-on-submit-survey">Redirect On Submit Survey</a></li>
+        <li><a href="#webhooks-in-development">Webhooks In Development</a></li>
+      </ul>
+    </li>
+  </ol>
+</details>
+
+&nbsp;
+
 ## About The Project
 
 - Node with React: Fullstack Web Development
@@ -5,6 +33,22 @@
 - Tutorial for Emaily
 - [Original Repo: Emaily](https://github.com/StephenGrider/FullstackReactCode)
 - [Stephen Grider](https://github.com/StephenGrider)
+
+&nbsp;
+
+## Installation
+
+1. Install NPM packages.
+
+```sh
+npm install
+```
+
+2. Rename <code>.env.template</code> to <code>.env</code>
+3. Fill in the respective fileds in the .env file
+
+4. Use [ngrok](https://ngrok.com/download) for dev mode (localhost) webhook.
+   - Refer to <a href="#webhooks-in-development">Webhooks In Development</a>
 
 &nbsp;
 
@@ -374,7 +418,7 @@
 
 > The source code tries to address this and make this clear:
 
-- Applies the `name`ed strategy (or strategies) to the incoming request, in order to authenticate the request. If authentication is successful, the user will be logged in and populated at `req.user` and a session will be established by default. If authentication fails, an unauthorized response will be sent.
+> Applies the `name`ed strategy (or strategies) to the incoming request, in order to authenticate the request. If authentication is successful, the user will be logged in and populated at `req.user` and a session will be established by default. If authentication fails, an unauthorized response will be sent.
 
 &nbsp;
 
@@ -616,7 +660,7 @@ https://1c11-103-107-198-118.ngrok.io/api/surveys/webhooks
 
 > <b>Seng Fei:</b> May I know where do we get our survey id on the spot when we put it in email email template as ${survey.id}? Because I thought the survey object that we passed in only contains title, subject, body, recipients, \_user and dateSent. The survey id only generated when it is being stored in database, that is after we send the mailer.
 
-> <b>Matouš:</b> It is generated when you create the survey. <code>const survey = new Survey.../<code>. You can <code>console.log(survey)</code> right after to see the object
+> <b>Matouš:</b> It is generated when you create the survey. <code>const survey = new Survey...</code>. You can <code>console.log(survey)</code> right after to see the object
 
 ![diagrams-008-extract](diagrams/diagrams-008-extract.png)
 
@@ -662,7 +706,7 @@ arr.map(v => v); // Exception!
 
 > <b>Jeffrey:</b> Bug in the code (\_.uniqBy() doesn't take a third argument)
 
-> Just an FYI to <b>not</b> rely on the usage of <code>\_.uniqBy</code> taught in the video. The usage of <code>_.uniqBy</code> shown is incorrect. The video shows a third argument provided to <code>_.uniqBy</code>, but it is ignored by lodash.
+> Just an FYI to <b>not</b> rely on the usage of <code>\_.uniqBy</code> taught in the video. The usage of <code>\_.uniqBy</code> shown is incorrect. The video shows a third argument provided to <code>\_.uniqBy</code>, but it is ignored by lodash.
 
 > In this case, the bug is that the hook will only allow one survey per email address per batch of events sent by sendgrid. The surveyId is not used to determine uniqueness. I checked the documentation and the code itself for the current version of lodash (<code>4.17.15</code> as of today) in github as well as the version Stephen used in his video (<code>4.17.4</code>, based on his <code>npm install</code> command in video 187). Neither accept a third argument.
 
